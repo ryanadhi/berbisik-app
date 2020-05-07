@@ -67,5 +67,6 @@ node_modules/
 
 
 serviceAccountKey.json
+key.json
 
 .vscode
