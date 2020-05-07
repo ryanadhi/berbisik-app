@@ -1,13 +1,15 @@
-const { db } = require("../util/admin");
+const { admin, db } = require("../util/admin");
 const firebase = require("firebase");
 const firebaseConfig = require("../util/firebaseconfig");
 const {
   validateSignupData,
   validateLoginData,
+  reduceUserDetails,
 } = require("../util/validationHelpers");
 
 firebase.initializeApp(firebaseConfig);
 
+// User Sign up
 exports.signup = (req, res) => {
   const newUser = {
     email: req.body.email,
@@ -21,6 +23,8 @@ exports.signup = (req, res) => {
   if (!valid) {
     return res.status(400).json(errors);
   }
+
+  const noImg = "no-image.png";
 
   let token, userId;
   db.doc(`/users/${newUser.username}`)
@@ -46,6 +50,7 @@ exports.signup = (req, res) => {
         username: newUser.username,
         email: newUser.email,
         createdAt: new Date().toISOString(),
+        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${noImg}?alt=media`,
         userId,
       };
       return db.doc(`/users/${newUser.username}`).set(userCredentials);
@@ -63,6 +68,7 @@ exports.signup = (req, res) => {
     });
 };
 
+// User login
 exports.login = (req, res) => {
   const user = {
     email: req.body.email,
@@ -96,4 +102,97 @@ exports.login = (req, res) => {
         return res.status(500).json({ error: err.code });
       }
     });
+};
+
+// Add user detail
+exports.addUserDetail = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/users/${req.user.username}`)
+    .update(userDetails)
+    .then(() => {
+      return res.status(200).json({ message: "Details added successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+// Get own user detail
+exports.getAuthenticatedUser = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.user.username}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db
+          .collection("likes")
+          .where("userCreated", "==", req.user.username)
+          .get();
+      }
+    })
+    .then((data) => {
+      userData.likes = [];
+      data.forEach((doc) => {
+        userData.likes.push(doc.data());
+      });
+      return res.status(200).json(userData);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+// Upload image for user
+exports.uploadImage = (req, res) => {
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
+
+  const busboy = new BusBoy({ headers: req.headers });
+
+  let imageFilename;
+  let imageToBeUploaded;
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    if (mimetype !== "image/png" && mimetype !== "image/jpeg") {
+      return res.status(400).json({ error: "Wrong file type submitted" });
+    }
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
+    imageFilename = `${req.user.username}-${Math.round(
+      Math.random() * 100000000000
+    )}.${imageExtension}`;
+    const filepath = path.join(os.tmpdir(), imageFilename);
+    imageToBeUploaded = { filepath, mimetype };
+    file.pipe(fs.createWriteStream(filepath));
+  });
+
+  busboy.on("finish", () => {
+    admin
+      .storage()
+      .bucket()
+      .upload(imageToBeUploaded.filepath, {
+        resumable: false,
+        metadata: {
+          metadata: {
+            contentType: imageToBeUploaded.mimetype,
+          },
+        },
+      })
+      .then(() => {
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFilename}?alt=media`;
+        return db.doc(`/users/${req.user.username}`).update({ imageUrl });
+      })
+      .then(() => {
+        return res.status(200).json({ message: "Image uploaded successfully" });
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ error: err.code });
+      });
+  });
+  busboy.end(req.rawBody);
 };
