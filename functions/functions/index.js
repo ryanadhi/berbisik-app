@@ -28,7 +28,7 @@ app.get("/whispers", (req, res) => {
         whispers.push({
           whisperId: doc.id,
           body: doc.data().body,
-          userHandle: doc.data().userHandle,
+          createdBy: doc.data().createdBy,
           createdAt: doc.data().createdAt,
         });
       });
@@ -40,11 +40,44 @@ app.get("/whispers", (req, res) => {
     });
 });
 
+// Middleware
+const firebaseAuth = (req, res, next) => {
+  let idToken;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    idToken = req.headers.authorization.split("Bearer ")[1];
+  } else {
+    console.error("No token found");
+    return res.status(403).json({ error: "Unauthorized" });
+  }
+  admin
+    .auth()
+    .verifyIdToken(idToken)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+      return db
+        .collection("users")
+        .where("userId", "==", req.user.uid)
+        .limit(1)
+        .get();
+    })
+    .then((data) => {
+      req.user.username = data.docs[0].data().username;
+      return next();
+    })
+    .catch((err) => {
+      console.error("Error while verifying token", err);
+      return res.status(403).json(err);
+    });
+};
+
 // Post new whisper
-app.post("/whispers", (req, res) => {
+app.post("/whispers", firebaseAuth, (req, res) => {
   const newWhisper = {
     body: req.body.body,
-    userHandle: req.body.userHandle,
+    createdBy: req.user.username,
     createdAt: new Date().toISOString(),
   };
 
@@ -78,7 +111,7 @@ app.post("/signup", (req, res) => {
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
-    handle: req.body.handle,
+    username: req.body.username,
   };
 
   // validate input
@@ -100,8 +133,8 @@ app.post("/signup", (req, res) => {
     errors.confirmPassword = "Password must match";
   }
 
-  if (isEmpty(newUser.handle)) {
-    errors.handle = "Must not be empty";
+  if (isEmpty(newUser.username)) {
+    errors.username = "Must not be empty";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -109,11 +142,13 @@ app.post("/signup", (req, res) => {
   }
 
   let token, userId;
-  db.doc(`/users/${newUser.handle}`)
+  db.doc(`/users/${newUser.username}`)
     .get()
     .then((doc) => {
       if (doc.exists) {
-        return res.status(400).json({ handle: `this handle is already taken` });
+        return res
+          .status(400)
+          .json({ username: `this username is already taken` });
       } else {
         return firebase
           .auth()
@@ -127,12 +162,12 @@ app.post("/signup", (req, res) => {
     .then((idToken) => {
       token = idToken;
       const userCredentials = {
-        handle: newUser.handle,
+        username: newUser.username,
         email: newUser.email,
         createdAt: new Date().toISOString(),
         userId,
       };
-      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+      return db.doc(`/users/${newUser.username}`).set(userCredentials);
     })
     .then(() => {
       return res.status(201).json({ token });
