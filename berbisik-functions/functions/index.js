@@ -47,10 +47,14 @@ exports.createNotificationOnLike = functions
   .region("asia-northeast1")
   .firestore.document("likes/{id}")
   .onCreate((snapshot) => {
-    db.doc(`/whispers/${snapshot.data().whisperId}`)
+    return db
+      .doc(`/whispers/${snapshot.data().whisperId}`)
       .get()
       .then((doc) => {
-        if (doc.exists) {
+        if (
+          doc.exists &&
+          doc.data().userCreated !== snapshot.data().userCreated
+        ) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             createdAt: new Date().toDateString(),
             recipient: doc.data().userCreated,
@@ -61,12 +65,8 @@ exports.createNotificationOnLike = functions
           });
         }
       })
-      .then(() => {
-        return;
-      })
       .catch((err) => {
         console.error(err);
-        return;
       });
   });
 
@@ -74,14 +74,11 @@ exports.deleteNotificationOnUnlike = functions
   .region("asia-northeast1")
   .firestore.document("likes/{id}")
   .onDelete((snapshot) => {
-    db.doc(`/notifications/${snapshot.id}`)
+    return db
+      .doc(`/notifications/${snapshot.id}`)
       .delete()
-      .then(() => {
-        return;
-      })
       .catch((err) => {
         console.error(err);
-        return;
       });
   });
 
@@ -89,10 +86,14 @@ exports.createNotificationOnComment = functions
   .region("asia-northeast1")
   .firestore.document("comments/{id}")
   .onCreate((snapshot) => {
-    db.doc(`/whispers/${snapshot.data().whisperId}`)
+    return db
+      .doc(`/whispers/${snapshot.data().whisperId}`)
       .get()
       .then((doc) => {
-        if (doc.exists) {
+        if (
+          doc.exists &&
+          doc.data().userCreated !== snapshot.data().userCreated
+        ) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             createdAt: new Date().toDateString(),
             recipient: doc.data().userCreated,
@@ -103,11 +104,68 @@ exports.createNotificationOnComment = functions
           });
         }
       })
-      .then(() => {
-        return;
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+
+exports.onUserImageChange = functions
+  .region("asia-northeast1")
+  .firestore.document("/users/{userId}")
+  .onUpdate((change) => {
+    if (change.before.data().imageUrl !== change.after.data().imageUrl) {
+      const batch = db.batch();
+      return db
+        .collection("whispers")
+        .where("userCreated", "==", change.before.data().username)
+        .get()
+        .then((data) => {
+          data.forEach((doc) => {
+            const whisper = db.doc(`/whispers/${doc.id}`);
+            batch.update(whisper, {
+              userCreatedImage: change.after.data().imageUrl,
+            });
+          });
+          return batch.commit();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else return true;
+  });
+
+exports.onWhisperDelete = functions
+  .region("asia-northeast1")
+  .firestore.document("/whispers/{whisperId}")
+  .onDelete((snapshot, context) => {
+    const whisperId = context.params.whisperId;
+    const batch = db.batch();
+    return db
+      .collection("comments")
+      .where("whisperId", "==", whisperId)
+      .get()
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/comments/${doc.id}`));
+        });
+        return db.collection("likes").where("whisperId", "==", whisperId).get();
+      })
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/likes/${doc.id}`));
+        });
+        return db
+          .collection("notifications")
+          .where("whisperId", "==", whisperId)
+          .get();
+      })
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/notifications/${doc.id}`));
+        });
+        return batch.commit();
       })
       .catch((err) => {
         console.error(err);
-        return;
       });
   });
