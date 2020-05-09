@@ -7,9 +7,6 @@ import { useInput } from "../helpers/useInput";
 import { useSelector, useDispatch } from "react-redux";
 import { editUserDetails } from "../redux/actions/userAction";
 
-// Utils
-import MyButton from "../utils/MyButton";
-
 // Mui
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";

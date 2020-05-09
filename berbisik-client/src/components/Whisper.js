@@ -9,6 +9,13 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+
+// Icons
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import ChatIcon from "@material-ui/icons/Chat";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -29,8 +36,47 @@ const useStyles = makeStyles({
 });
 
 export default function Whisper({ whisper }) {
-  const classes = useStyles();
   dayjs.extend(relativeTime);
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  const { authenticated, likes } = useSelector((state) => state.user);
+
+  const likedWhisper = () => {
+    if (likes && likes.find((like) => like.whisperId === whisper.whisperId))
+      return true;
+    else return false;
+  };
+
+  const handleLikeWhisper = () => {
+    dispatch(likeWhisper(whisper.whisperId));
+  };
+
+  const handleUnlikeWhisper = () => {
+    dispatch(unlikeWhisper(whisper.whisperId));
+  };
+
+  const likeButton = !authenticated ? (
+    <Link to="/login">
+      <Tooltip title="Like" placement="top">
+        <IconButton>
+          <FavoriteBorder color="primary" />
+        </IconButton>
+      </Tooltip>
+    </Link>
+  ) : likedWhisper() ? (
+    <Tooltip title="Undo like" placement="top">
+      <IconButton onClick={handleUnlikeWhisper}>
+        <FavoriteIcon color="primary" />
+      </IconButton>
+    </Tooltip>
+  ) : (
+    <Tooltip title="Like" placement="top">
+      <IconButton onClick={handleLikeWhisper}>
+        <FavoriteBorder color="primary" />
+      </IconButton>
+    </Tooltip>
+  );
+
   return (
     <div>
       <Card className={classes.root}>
@@ -52,6 +98,14 @@ export default function Whisper({ whisper }) {
             {dayjs(whisper.createdAt).fromNow()}
           </Typography>
           <Typography variant="body1">{whisper.body}</Typography>
+          {likeButton}
+          <span>{whisper.likeCount} Likes</span>
+          <Tooltip title="Comments" placement="top">
+            <IconButton>
+              <ChatIcon color="primary" />
+            </IconButton>
+          </Tooltip>
+          <span>{whisper.commentCount} Comments</span>
         </CardContent>
       </Card>
     </div>
