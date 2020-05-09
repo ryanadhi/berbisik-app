@@ -6,6 +6,7 @@ import {
   LOADING_UI,
   LOADING_USER,
   SET_UNAUTHENTICATED,
+  MARK_NOTIFICATIONS_READ,
 } from "../types";
 
 // Helpers
@@ -67,6 +68,16 @@ export const uploadImage = (formData) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+export const editUserDetails = (userDetails) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios
+    .post("/users", userDetails)
+    .then(() => {
+      dispatch(getUserData());
+    })
+    .catch((err) => console.log(err));
+};
+
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
@@ -80,4 +91,15 @@ export const getUserData = () => (dispatch) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const markNotificationsRead = (notificationIds) => (dispatch) => {
+  axios
+    .post("/notifications", notificationIds)
+    .then((res) => {
+      dispatch({
+        type: MARK_NOTIFICATIONS_READ,
+      });
+    })
+    .catch((err) => console.log(err));
 };

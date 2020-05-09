@@ -1,32 +1,27 @@
 import React from "react";
-import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 
 import Whisper from "../components/Whisper";
 import Profile from "../components/Profile";
 
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { getWhispers } from "../redux/actions/dataAction";
+
 export default function Home() {
-  const [whispers, setWhispers] = React.useState([]);
-
+  const dispatch = useDispatch();
+  const { whispers, dataLoading } = useSelector((state) => state.data);
   React.useEffect(() => {
-    axios
-      .get("/whispers")
-      .then((result) => {
-        setWhispers(result.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    dispatch(getWhispers());
+  }, [dispatch]);
 
-  let showWhispers =
-    whispers.length > 0 ? (
-      whispers.map((whisper) => (
-        <Whisper key={whisper.whisperId} whisper={whisper} />
-      ))
-    ) : (
-      <p>loading..</p>
-    );
+  let showWhispers = !dataLoading ? (
+    whispers.map((whisper) => (
+      <Whisper key={whisper.whisperId} whisper={whisper} />
+    ))
+  ) : (
+    <p>loading..</p>
+  );
 
   return (
     <div>

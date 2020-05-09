@@ -3,6 +3,9 @@ import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
   LOADING_USER,
+  LIKE_WHISPER,
+  UNLIKE_WHISPER,
+  MARK_NOTIFICATIONS_READ,
 } from "../types";
 
 const initialState = {
@@ -32,6 +35,30 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         userLoading: true,
+      };
+    case LIKE_WHISPER:
+      return {
+        ...state,
+        likes: [
+          ...state.likes,
+          {
+            userCreated: state.credentials.username,
+            whisperId: action.payload.whisperId,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      };
+    case UNLIKE_WHISPER:
+      return {
+        ...state,
+        likes: state.likes.filter(
+          (like) => like.whisperId !== action.payload.whisperId
+        ),
+      };
+    case MARK_NOTIFICATIONS_READ:
+      state.notifications.forEach((not) => (not.read = true));
+      return {
+        ...state,
       };
     default:
       return state;

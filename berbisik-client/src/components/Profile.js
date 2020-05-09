@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
-// Utils
-import MyButton from "../utils/MyButton";
+// Components
+import EditDetails from "./EditDetails";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { logoutUser, uploadImage } from "../redux/actions/userAction";
+import { logout, uploadImage } from "../redux/actions/userAction";
 
 // MUI
 import Button from "@material-ui/core/Button";
@@ -15,6 +15,8 @@ import Typography from "@material-ui/core/Typography";
 import MuiLink from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
 
 // Icons
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -24,6 +26,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
 
 const useStyles = makeStyles({
+  button: {
+    marginTop: 20,
+    position: "relative",
+  },
   paper: {
     padding: 20,
   },
@@ -72,6 +78,7 @@ const useStyles = makeStyles({
 });
 
 export default function Profile() {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const {
     authenticated,
@@ -83,13 +90,16 @@ export default function Profile() {
 
   const handleImageChange = (event) => {
     const image = event.target.files[0];
-    // const formData = new FormData();
-    // formData.append('image', image, image.name);
-    // this.props.uploadImage(formData);
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    dispatch(uploadImage(formData));
   };
   const handleEditPicture = () => {
     const fileInput = document.getElementById("imageInput");
     fileInput.click();
+  };
+  const handleLogout = () => {
+    dispatch(logout());
   };
   let profileMarkUp = !userLoading ? (
     authenticated ? (
@@ -102,13 +112,14 @@ export default function Profile() {
               hidden="hidden"
               onChange={handleImageChange}
             />
-            <MyButton
-              tip="Edit profile picture"
-              onClick={handleEditPicture}
-              btnClassName="button"
-            >
-              <EditIcon color="primary" />
-            </MyButton>
+            <Tooltip title="Edit profile picture" placement="top">
+              <IconButton
+                onClick={handleEditPicture}
+                className={classes.button}
+              >
+                <EditIcon color="primary" />
+              </IconButton>
+            </Tooltip>
             <img
               src={credentials.imageUrl}
               alt="profile"
@@ -156,6 +167,12 @@ export default function Profile() {
               Joined {dayjs(credentials.createdAt).format("MMM YYYY")}
             </span>
           </div>
+          <Tooltip title="Logout" placement="top">
+            <IconButton onClick={handleLogout} className={classes.button}>
+              <KeyboardReturn color="primary" />
+            </IconButton>
+          </Tooltip>
+          <EditDetails />
         </div>
       </Paper>
     ) : (
