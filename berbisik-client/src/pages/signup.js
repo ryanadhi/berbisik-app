@@ -1,6 +1,5 @@
 import React from "react";
 import AppIcon from "../images/icon.png";
-import axios from "axios";
 import { Link, useHistory } from "react-router-dom";
 
 // Helpers
@@ -13,6 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { signup } from "../redux/actions/userAction";
 
 const useStyles = makeStyles({
   form: {
@@ -43,10 +46,12 @@ const useStyles = makeStyles({
 });
 
 export default function Login(props) {
+  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
-  const [errors, setErrors] = React.useState({});
+
+  const { errors, loading } = useSelector((state) => state.UI);
+
   const { value: email, bind: bindEmail, reset: resetEmail } = useInput("");
   const {
     value: password,
@@ -66,26 +71,12 @@ export default function Login(props) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    setLoading(true);
     const newUserData = { email, password, confirmPassword, username };
-    axios
-      .post("/signup", newUserData)
-      .then(({ data }) => {
-        console.log(data);
-        localStorage.setItem("firebaseAuthToken", `Bearer ${data.token}`);
-        history.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        setErrors(err.response.data);
-      })
-      .finally(() => {
-        setLoading(false);
-        resetPassword();
-        resetEmail();
-        resetConfirmPassword();
-        resetUsername();
-      });
+    dispatch(signup(newUserData, history));
+    resetPassword();
+    resetEmail();
+    resetConfirmPassword();
+    resetUsername();
   };
   return (
     <div>
