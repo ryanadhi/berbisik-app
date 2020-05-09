@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+// Components
+import DeleteWhisper from "./DeleteWhisper";
+
 // Mui
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -23,6 +26,7 @@ import { likeWhisper, unlikeWhisper } from "../redux/actions/dataAction";
 
 const useStyles = makeStyles({
   root: {
+    position: "relative",
     display: "flex",
     marginBottom: 20,
   },
@@ -39,7 +43,9 @@ export default function Whisper({ whisper }) {
   dayjs.extend(relativeTime);
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { authenticated, likes } = useSelector((state) => state.user);
+  const { credentials, authenticated, likes } = useSelector(
+    (state) => state.user
+  );
 
   const likedWhisper = () => {
     if (likes && likes.find((like) => like.whisperId === whisper.whisperId))
@@ -54,6 +60,11 @@ export default function Whisper({ whisper }) {
   const handleUnlikeWhisper = () => {
     dispatch(unlikeWhisper(whisper.whisperId));
   };
+
+  const deleteButton =
+    authenticated && whisper.userCreated === credentials.username ? (
+      <DeleteWhisper whisperId={whisper.whisperId} />
+    ) : null;
 
   const likeButton = !authenticated ? (
     <Link to="/login">
@@ -94,6 +105,7 @@ export default function Whisper({ whisper }) {
           >
             {whisper.userCreated}
           </Typography>
+          {deleteButton}
           <Typography variant="body2" color="textSecondary">
             {dayjs(whisper.createdAt).fromNow()}
           </Typography>

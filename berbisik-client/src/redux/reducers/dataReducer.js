@@ -35,10 +35,10 @@ export default function (state = initialState, actions) {
       };
     case LIKE_WHISPER:
     case UNLIKE_WHISPER:
-      let index = state.whispers.findIndex(
+      let indexLike = state.whispers.findIndex(
         (whisper) => whisper.whisperId === actions.payload.whisperId
       );
-      state.whispers[index] = actions.payload;
+      state.whispers[indexLike] = actions.payload;
       if (state.whisper.whisperId === actions.payload.whisperId) {
         state.whisper = actions.payload;
       }
@@ -46,10 +46,10 @@ export default function (state = initialState, actions) {
         ...state,
       };
     case DELETE_WHISPER:
-      index = state.whispers.findIndex(
+      let indexDelete = state.whispers.findIndex(
         (whisper) => whisper.whisperId === actions.payload
       );
-      state.whispers.splice(index, 1);
+      state.whispers.splice(indexDelete, 1);
       return {
         ...state,
       };
