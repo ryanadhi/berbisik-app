@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 
 // Components
 import EditDetails from "./EditDetails";
+import ProfileSkeleton from "../../utils/ProfileSkeleton";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -80,13 +81,9 @@ const useStyles = makeStyles({
 export default function Profile() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const {
-    authenticated,
-    credentials,
-    likes,
-    notifications,
-    userLoading,
-  } = useSelector((state) => state.user);
+  const { authenticated, credentials, userLoading } = useSelector(
+    (state) => state.user
+  );
 
   const handleImageChange = (event) => {
     const image = event.target.files[0];
@@ -201,7 +198,7 @@ export default function Profile() {
       </Paper>
     )
   ) : (
-    <p>loading,,</p>
+    <ProfileSkeleton />
   );
   return profileMarkUp;
 }

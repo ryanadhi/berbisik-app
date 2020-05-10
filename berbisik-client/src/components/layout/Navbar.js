@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 // Components
 import PostWhisper from "../whisper/PostWhisper";
+import Notification from "./Notification";
 
 // Redux
 import { useSelector } from "react-redux";
@@ -16,7 +17,6 @@ import IconButton from "@material-ui/core/IconButton";
 
 // Icons
 import HomeIcon from "@material-ui/icons/Home";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 
 export default function Navbar() {
   const { authenticated } = useSelector((state) => state.user);
@@ -34,11 +34,7 @@ export default function Navbar() {
                   </IconButton>
                 </Tooltip>
               </Link>
-              <Tooltip title="Notifications" placement="top">
-                <IconButton>
-                  <NotificationsIcon />
-                </IconButton>
-              </Tooltip>
+              <Notification />
             </>
           ) : (
             <>

@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 
 import Whisper from "../components/whisper/Whisper";
 import Profile from "../components/profile/Profile";
+import WhisperSkeleton from "../utils/WhisperSkeleton";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -20,7 +21,7 @@ export default function Home() {
       <Whisper key={whisper.whisperId} whisper={whisper} />
     ))
   ) : (
-    <p>loading..</p>
+    <WhisperSkeleton />
   );
 
   return (

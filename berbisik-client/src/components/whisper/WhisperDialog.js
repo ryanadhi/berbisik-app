@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import dayjs from "dayjs";
 
 //Components
 import LikeButton from "./LikeButton";
 import Comments from "./Comments";
+import CommentForm from "./CommentForm";
 
 // MUI Stuff
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,7 +24,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { getWhisper } from "../../redux/actions/dataAction";
+import { getWhisper, clearErrors } from "../../redux/actions/dataAction";
 
 const useStyles = makeStyles({
   profileImage: {
@@ -61,19 +62,35 @@ const useStyles = makeStyles({
 
 export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
   const dispatch = useDispatch();
+  const { url } = useRouteMatch();
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
+  const [oldPath, setOldPath] = React.useState(url);
+  const [newPath, setNewPath] = React.useState(
+    `/users/${userCreated}/whispers/${whisperId}`
+  );
   const { whisper } = useSelector((state) => state.data);
   const { loading } = useSelector((state) => state.UI);
 
+  React.useEffect(() => {
+    if (openDialog) {
+      handleOpen();
+    }
+  }, [openDialog]);
   const handleOpen = () => {
+    if (oldPath === newPath) {
+      setOldPath(`/users/${userCreated}`);
+    }
+    window.history.pushState(null, null, newPath);
     setOpen(true);
     dispatch(getWhisper(whisperId));
   };
 
   const handleClose = () => {
+    window.history.pushState(null, null, oldPath);
     setOpen(false);
+    dispatch(clearErrors());
   };
 
   const dialogMarkup = loading ? (
@@ -114,6 +131,7 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
         <span>{whisper.commentCount} Comments</span>
       </Grid>
       <hr className={classes.visibleSeparator} />
+      <CommentForm whisperId={whisper.whisperId} />
       <Comments comments={whisper.comments} />
     </Grid>
   );

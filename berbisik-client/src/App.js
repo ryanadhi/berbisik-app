@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import User from "./pages/user";
 
 // Components
 import Navbar from "./components/layout/Navbar";
@@ -62,6 +63,11 @@ function App() {
         <Navbar />
         <div className="container">
           <Switch>
+            <Route
+              path="/users/:username/whispers/:whisperId"
+              component={User}
+            />
+            <Route component={User} path="/users/:username" />
             <AuthRoute component={Login} path="/login" />
             <AuthRoute component={Signup} path="/signup" />
             <Route component={Home} path="/" />

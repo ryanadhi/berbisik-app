@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Whisper({ whisper }) {
+export default function Whisper({ whisper, openDialog }) {
   dayjs.extend(relativeTime);
   const classes = useStyles();
   const { credentials, authenticated } = useSelector((state) => state.user);
@@ -81,7 +81,7 @@ export default function Whisper({ whisper }) {
           <WhisperDialog
             whisperId={whisper.whisperId}
             userCreated={whisper.userCreated}
-            // openDialog={openDialog}
+            openDialog={openDialog}
           />
         </CardContent>
       </Card>

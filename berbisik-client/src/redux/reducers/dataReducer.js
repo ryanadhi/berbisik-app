@@ -62,10 +62,16 @@ export default function (state = initialState, actions) {
         whispers: [actions.payload, ...state.whispers],
       };
     case SUBMIT_COMMENT:
+      let indexComment = state.whispers.findIndex(
+        (whisper) => whisper.whisperId === actions.payload.whisperId
+      );
+      state.whispers[indexComment].commentCount =
+        state.whispers[indexComment].commentCount + 1;
       return {
         ...state,
         whisper: {
           ...state.whisper,
+          commentCount: state.whisper.commentCount + 1,
           comments: [actions.payload, ...state.whisper.comments],
         },
       };
