@@ -5,6 +5,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 // Components
 import DeleteWhisper from "./DeleteWhisper";
+import WhisperDialog from "./WhisperDialog";
+import LikeButton from "./LikeButton";
 
 // Mui
 import Card from "@material-ui/core/Card";
@@ -16,13 +18,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 
 // Icons
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import ChatIcon from "@material-ui/icons/Chat";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { likeWhisper, unlikeWhisper } from "../redux/actions/dataAction";
 
 const useStyles = makeStyles({
   root: {
@@ -41,52 +40,13 @@ const useStyles = makeStyles({
 
 export default function Whisper({ whisper }) {
   dayjs.extend(relativeTime);
-  const dispatch = useDispatch();
   const classes = useStyles();
-  const { credentials, authenticated, likes } = useSelector(
-    (state) => state.user
-  );
-
-  const likedWhisper = () => {
-    if (likes && likes.find((like) => like.whisperId === whisper.whisperId))
-      return true;
-    else return false;
-  };
-
-  const handleLikeWhisper = () => {
-    dispatch(likeWhisper(whisper.whisperId));
-  };
-
-  const handleUnlikeWhisper = () => {
-    dispatch(unlikeWhisper(whisper.whisperId));
-  };
+  const { credentials, authenticated } = useSelector((state) => state.user);
 
   const deleteButton =
     authenticated && whisper.userCreated === credentials.username ? (
       <DeleteWhisper whisperId={whisper.whisperId} />
     ) : null;
-
-  const likeButton = !authenticated ? (
-    <Link to="/login">
-      <Tooltip title="Like" placement="top">
-        <IconButton>
-          <FavoriteBorder color="primary" />
-        </IconButton>
-      </Tooltip>
-    </Link>
-  ) : likedWhisper() ? (
-    <Tooltip title="Undo like" placement="top">
-      <IconButton onClick={handleUnlikeWhisper}>
-        <FavoriteIcon color="primary" />
-      </IconButton>
-    </Tooltip>
-  ) : (
-    <Tooltip title="Like" placement="top">
-      <IconButton onClick={handleLikeWhisper}>
-        <FavoriteBorder color="primary" />
-      </IconButton>
-    </Tooltip>
-  );
 
   return (
     <div>
@@ -103,14 +63,14 @@ export default function Whisper({ whisper }) {
             to={`/users/${whisper.userCreated}`}
             color="primary"
           >
-            {whisper.userCreated}
+            @{whisper.userCreated}
           </Typography>
           {deleteButton}
           <Typography variant="body2" color="textSecondary">
             {dayjs(whisper.createdAt).fromNow()}
           </Typography>
           <Typography variant="body1">{whisper.body}</Typography>
-          {likeButton}
+          <LikeButton whisperId={whisper.whisperId} />
           <span>{whisper.likeCount} Likes</span>
           <Tooltip title="Comments" placement="top">
             <IconButton>
@@ -118,6 +78,11 @@ export default function Whisper({ whisper }) {
             </IconButton>
           </Tooltip>
           <span>{whisper.commentCount} Comments</span>
+          <WhisperDialog
+            whisperId={whisper.whisperId}
+            userCreated={whisper.userCreated}
+            // openDialog={openDialog}
+          />
         </CardContent>
       </Card>
     </div>

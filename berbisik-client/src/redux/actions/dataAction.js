@@ -11,6 +11,8 @@ import {
   SET_WHISPER,
   STOP_LOADING_UI,
   SUBMIT_COMMENT,
+  LOADING_POST_WHISPER,
+  STOP_LOADING_POST_WHISPER,
 } from "../types";
 
 import axios from "axios";
@@ -38,7 +40,7 @@ export const getWhispers = () => (dispatch) => {
 export const getWhisper = (whisperId) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .get(`/whisper/${whisperId}`)
+    .get(`/whispers/${whisperId}`)
     .then(({ data }) => {
       dispatch({
         type: SET_WHISPER,
@@ -51,7 +53,7 @@ export const getWhisper = (whisperId) => (dispatch) => {
 
 // Post one whisper
 export const postWhisper = (newWhisper) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+  dispatch({ type: LOADING_POST_WHISPER });
   axios
     .post("/whispers", newWhisper)
     .then(({ data }) => {
@@ -66,6 +68,9 @@ export const postWhisper = (newWhisper) => (dispatch) => {
         type: SET_ERRORS,
         payload: err.response.data,
       });
+    })
+    .finally(() => {
+      dispatch({ type: STOP_LOADING_POST_WHISPER });
     });
 };
 

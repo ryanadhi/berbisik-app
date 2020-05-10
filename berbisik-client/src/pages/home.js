@@ -1,8 +1,8 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 
-import Whisper from "../components/Whisper";
-import Profile from "../components/Profile";
+import Whisper from "../components/whisper/Whisper";
+import Profile from "../components/profile/Profile";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";

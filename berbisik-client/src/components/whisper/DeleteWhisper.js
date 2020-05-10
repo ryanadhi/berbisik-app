@@ -2,7 +2,7 @@ import React from "react";
 
 // Redux
 import { useDispatch } from "react-redux";
-import { deleteWhisper } from "../redux/actions/dataAction";
+import { deleteWhisper } from "../../redux/actions/dataAction";
 // Mui
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";

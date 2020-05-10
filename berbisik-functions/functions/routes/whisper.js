@@ -28,6 +28,9 @@ exports.getAllWhispers = (req, res) => {
 
 // Post one whisper
 exports.postOneWhisper = (req, res) => {
+  if (req.body.body.trim() === "") {
+    return res.status(400).json({ body: "You cannot post empty bisikan" });
+  }
   const newWhisper = {
     body: req.body.body,
     userCreated: req.user.username,

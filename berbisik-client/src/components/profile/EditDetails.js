@@ -1,11 +1,11 @@
 import React from "react";
 
 // Helpers
-import { useInput } from "../helpers/useInput";
+import { useInput } from "../../helpers/useInput";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { editUserDetails } from "../redux/actions/userAction";
+import { editUserDetails } from "../../redux/actions/userAction";
 
 // Mui
 import { makeStyles } from "@material-ui/core/styles";
@@ -53,14 +53,14 @@ export default function EditDetails() {
 
   const handleOpen = () => {
     setOpen(true);
-    // this.mapUserDetailsToState(this.props.credentials);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
     const userDetails = {
       bio,
       website,

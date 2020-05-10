@@ -8,6 +8,7 @@ import {
   SET_UNAUTHENTICATED,
   MARK_NOTIFICATIONS_READ,
 } from "../types";
+import { getWhispers } from "./dataAction";
 
 // Helpers
 const setAuthorizationHeader = (token) => {
@@ -64,6 +65,9 @@ export const uploadImage = (formData) => (dispatch) => {
     .post("/users/image", formData)
     .then(() => {
       dispatch(getUserData());
+      setTimeout(() => {
+        dispatch(getWhispers());
+      }, 2500);
     })
     .catch((err) => console.log(err));
 };

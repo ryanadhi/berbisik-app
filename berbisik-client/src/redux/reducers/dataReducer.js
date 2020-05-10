@@ -7,12 +7,15 @@ import {
   POST_WHISPER,
   SET_WHISPER,
   SUBMIT_COMMENT,
+  LOADING_POST_WHISPER,
+  STOP_LOADING_POST_WHISPER,
 } from "../types";
 
 const initialState = {
   whispers: [],
   whisper: {},
   dataLoading: false,
+  postWhisperLoading: false,
 };
 
 export default function (state = initialState, actions) {
@@ -65,6 +68,16 @@ export default function (state = initialState, actions) {
           ...state.whisper,
           comments: [actions.payload, ...state.whisper.comments],
         },
+      };
+    case LOADING_POST_WHISPER:
+      return {
+        ...state,
+        postWhisperLoading: true,
+      };
+    case STOP_LOADING_POST_WHISPER:
+      return {
+        ...state,
+        postWhisperLoading: false,
       };
     default:
       return state;

@@ -13,7 +13,7 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 
 // Components
-import Navbar from "./components/Navbar";
+import Navbar from "./components/layout/Navbar";
 
 // Utils
 import AuthRoute from "./utils/AuthRoute";

@@ -7,7 +7,7 @@ import EditDetails from "./EditDetails";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
-import { logout, uploadImage } from "../redux/actions/userAction";
+import { logout, uploadImage } from "../../redux/actions/userAction";
 
 // MUI
 import Button from "@material-ui/core/Button";

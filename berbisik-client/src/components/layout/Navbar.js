@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// Components
+import PostWhisper from "../whisper/PostWhisper";
+
 // Redux
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 // Material UI
 import AppBar from "@material-ui/core/AppBar";
@@ -13,11 +16,9 @@ import IconButton from "@material-ui/core/IconButton";
 
 // Icons
 import HomeIcon from "@material-ui/icons/Home";
-import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
 export default function Navbar() {
-  const dispatch = useDispatch;
   const { authenticated } = useSelector((state) => state.user);
   return (
     <div>
@@ -25,11 +26,7 @@ export default function Navbar() {
         <Toolbar className="nav-container">
           {authenticated ? (
             <>
-              <Tooltip title="Add Bisikan" placement="top">
-                <IconButton>
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
+              <PostWhisper />
               <Link to="/">
                 <Tooltip title="Home" placement="top">
                   <IconButton>
