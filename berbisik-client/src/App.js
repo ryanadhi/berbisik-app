@@ -23,6 +23,9 @@ import AuthRoute from "./utils/AuthRoute";
 import { getUserData, logout } from "./redux/actions/userAction";
 import { SET_AUTHENTICATED } from "./redux/types";
 
+axios.defaults.baseURL =
+  "https://asia-northeast1-berbisik-app.cloudfunctions.net/api";
+
 const theme = createMuiTheme({
   palette: {
     primary: {

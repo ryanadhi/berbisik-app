@@ -40,5 +40,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://asia-northeast1-berbisik-app.cloudfunctions.net/api "
+  "proxy": "https://asia-northeast1-berbisik-app.cloudfunctions.net/api"
 }
