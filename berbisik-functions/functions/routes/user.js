@@ -101,7 +101,7 @@ exports.login = (req, res) => {
           .json({ general: "Wrong password, please try again" });
       } else if (err.code === "auth/user-not-found") {
         return res.status(403).json({ general: "Email is not registered" });
-      } else if (err.code === "login: auth/invalid-email") {
+      } else if (err.code === "auth/invalid-email") {
         return res.status(403).json({ email: "Invalid email address" });
       } else {
         return res.status(500).json({ error: err.code });
