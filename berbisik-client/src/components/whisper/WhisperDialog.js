@@ -21,6 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import UnfoldMore from "@material-ui/icons/UnfoldMore";
 import ChatIcon from "@material-ui/icons/Chat";
+import { red } from "@material-ui/core/colors";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -41,8 +42,8 @@ const useStyles = makeStyles({
     left: "90%",
   },
   expandButton: {
-    position: "absolute",
-    left: "90%",
+    // position: "absolute",
+    // left: "90%",
   },
   spinnerDiv: {
     textAlign: "center",
@@ -55,8 +56,11 @@ const useStyles = makeStyles({
   },
   visibleSeparator: {
     width: "100%",
+    textAlign: "center",
     borderBottom: "1px solid rgba(0,0,0,0.1)",
-    marginBottom: 20,
+  },
+  typography: {
+    color: "#cf7500",
   },
 });
 
@@ -108,9 +112,10 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
       </Grid>
       <Grid item sm={7}>
         <Typography
+          className={classes.typography}
           component={Link}
           color="primary"
-          variant="h5"
+          variant="h6"
           to={`/users/${whisper.userCreated}`}
         >
           @{whisper.userCreated}
@@ -122,16 +127,20 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
         <hr className={classes.invisibleSeparator} />
         <Typography variant="body1">{whisper.body}</Typography>
         <LikeButton whisperId={whisper.whisperId} />
-        <span>{whisper.likeCount} Likes</span>
+        <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+          {whisper.likeCount} Likes
+        </span>
         <Tooltip title="Comments" placement="top">
           <IconButton>
             <ChatIcon color="primary" />
           </IconButton>
         </Tooltip>
-        <span>{whisper.commentCount} Comments</span>
+        <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+          {whisper.commentCount} Comments
+        </span>
       </Grid>
-      <hr className={classes.visibleSeparator} />
       <CommentForm whisperId={whisper.whisperId} />
+      <hr className={classes.visibleSeparator} />
       <Comments comments={whisper.comments} />
     </Grid>
   );
@@ -150,7 +159,7 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <Tooltip title="Close" placement="top" className={classes.closeButton}>
           <IconButton onClick={handleClose}>
-            <CloseIcon color="secondary" />
+            <CloseIcon style={{ color: red[500] }} />
           </IconButton>
         </Tooltip>
         <DialogContent className={classes.dialogContent}>

@@ -9,6 +9,8 @@ import WhisperDialog from "./WhisperDialog";
 import LikeButton from "./LikeButton";
 
 // Mui
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
@@ -33,8 +35,34 @@ const useStyles = makeStyles({
     minWidth: 200,
   },
   content: {
-    padding: 25,
+    padding: 10,
     objectFit: "cover",
+  },
+  rootGrid: {
+    flexGrow: 1,
+  },
+  paperContainer: {
+    padding: 5,
+    marginBottom: 20,
+    borderRadius: "10px",
+  },
+  mediaInsideGrid: {
+    width: 100,
+    height: 100,
+    borderRadius: "50%",
+  },
+  contentAction: {
+    padding: 0,
+    height: 20,
+  },
+  gridContent: {
+    padding: 5,
+  },
+  gridImage: {
+    paddingTop: 12,
+  },
+  typography: {
+    color: "#cf7500",
   },
 });
 
@@ -49,42 +77,84 @@ export default function Whisper({ whisper, openDialog }) {
     ) : null;
 
   return (
-    <div>
-      <Card className={classes.root}>
-        <CardMedia
-          className={classes.media}
-          image={whisper.userCreatedImage}
-          title="Profile image"
-        />
-        <CardContent className={classes.content}>
-          <Typography
-            variant="h5"
-            component={Link}
-            to={`/users/${whisper.userCreated}`}
-            color="primary"
+    <>
+      <Paper className={classes.paperContainer} elevation={3}>
+        <Grid container className={classes.rootGrid} spacing={1}>
+          <Grid
+            container
+            justify="center"
+            className={classes.gridImage}
+            sm={2}
+            xs={12}
           >
-            @{whisper.userCreated}
-          </Typography>
-          {deleteButton}
-          <Typography variant="body2" color="textSecondary">
-            {dayjs(whisper.createdAt).fromNow()}
-          </Typography>
-          <Typography variant="body1">{whisper.body}</Typography>
-          <LikeButton whisperId={whisper.whisperId} />
-          <span>{whisper.likeCount} Likes</span>
-          <Tooltip title="Comments" placement="top">
-            <IconButton>
-              <ChatIcon color="primary" />
-            </IconButton>
-          </Tooltip>
-          <span>{whisper.commentCount} Comments</span>
-          <WhisperDialog
-            whisperId={whisper.whisperId}
-            userCreated={whisper.userCreated}
-            openDialog={openDialog}
-          />
-        </CardContent>
-      </Card>
-    </div>
+            <CardMedia
+              className={classes.mediaInsideGrid}
+              image={whisper.userCreatedImage}
+              title="Profile image"
+            />
+          </Grid>
+          <Grid container sm={10} xs={12} direction="column">
+            <Grid container>
+              <Grid item sm={10} xs={12}>
+                <CardContent className={classes.gridContent}>
+                  <Typography
+                    variant="h6"
+                    component={Link}
+                    to={`/users/${whisper.userCreated}`}
+                    color="primary"
+                    className={classes.typography}
+                  >
+                    @{whisper.userCreated}
+                  </Typography>
+                  <Typography variant="caption" color="textSecondary">
+                    {" . "}
+                    {dayjs(whisper.createdAt).fromNow()}
+                  </Typography>
+                  <Typography variant="body1">{whisper.body}</Typography>
+                </CardContent>
+              </Grid>
+              <Grid
+                container
+                sm={2}
+                xs={12}
+                justify="center"
+                alignItems="flex-start"
+              >
+                <WhisperDialog
+                  whisperId={whisper.whisperId}
+                  userCreated={whisper.userCreated}
+                  openDialog={openDialog}
+                />
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item sm={10} xs={12}>
+                <CardContent className={classes.contentAction}>
+                  <LikeButton whisperId={whisper.whisperId} />
+                  <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+                    {whisper.likeCount} Likes
+                  </span>
+                  <Link
+                    to={`/users/${whisper.userCreated}/whispers/${whisper.whisperId}`}
+                  >
+                    <Tooltip title="Comments" placement="top">
+                      <IconButton>
+                        <ChatIcon color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                  <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+                    {whisper.commentCount} Comments
+                  </span>
+                </CardContent>
+              </Grid>
+              <Grid container sm={2} xs={12} justify="center">
+                {deleteButton}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+    </>
   );
 }

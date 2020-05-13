@@ -33,6 +33,7 @@ const useStyles = makeStyles({
   },
   paper: {
     padding: 20,
+    borderRadius: "10px",
   },
   profile: {
     "& .image-wrapper": {
@@ -40,8 +41,8 @@ const useStyles = makeStyles({
       position: "relative",
       "& button": {
         position: "absolute",
-        top: "80%",
-        left: "70%",
+        top: "70%",
+        left: "80%",
       },
     },
     "& .profile-image": {
@@ -57,7 +58,7 @@ const useStyles = makeStyles({
         verticalAlign: "middle",
       },
       "& a": {
-        color: "#00bcd4",
+        color: "#cf7500",
       },
     },
     "& hr": {
@@ -67,6 +68,7 @@ const useStyles = makeStyles({
     "& svg.button": {
       "&:hover": {
         cursor: "pointer",
+        padding: "12px",
       },
     },
   },
@@ -180,7 +182,7 @@ export default function Profile() {
         <div className={classes.buttons}>
           <Button
             variant="contained"
-            color="primary"
+            color="inherit"
             component={Link}
             to="/login"
           >
@@ -188,7 +190,7 @@ export default function Profile() {
           </Button>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             component={Link}
             to="/signup"
           >

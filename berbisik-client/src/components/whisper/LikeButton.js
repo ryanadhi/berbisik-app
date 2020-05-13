@@ -15,7 +15,6 @@ import { likeWhisper, unlikeWhisper } from "../../redux/actions/dataAction";
 
 export default function LikeButton({ whisperId }) {
   const dispatch = useDispatch();
-  //   const classes = useStyles();
   const { authenticated, likes } = useSelector((state) => state.user);
 
   const likedWhisper = () => {

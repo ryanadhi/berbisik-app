@@ -21,6 +21,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // Icon
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   button: {
@@ -89,7 +90,7 @@ export default function PostWhisper() {
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <Tooltip title="Close" placement="top" className={classes.closeButton}>
           <IconButton onClick={handleClose}>
-            <CloseIcon color="secondary" />
+            <CloseIcon style={{ color: red[500] }} />
           </IconButton>
         </Tooltip>
         <DialogTitle>Post a new Bisikan</DialogTitle>

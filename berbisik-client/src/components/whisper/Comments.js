@@ -26,6 +26,9 @@ const useStyles = makeStyles({
     borderBottom: "1px solid rgba(0,0,0,0.1)",
     marginBottom: 20,
   },
+  typography: {
+    color: "#cf7500",
+  },
 });
 
 export default function Comments({ comments }) {
@@ -48,12 +51,13 @@ export default function Comments({ comments }) {
                 <Grid item sm={9}>
                   <div className={classes.commentData}>
                     <Typography
-                      variant="h5"
+                      variant="h6"
                       component={Link}
                       to={`/users/${userCreated}`}
                       color="primary"
+                      className={classes.typography}
                     >
-                      {userCreated}
+                      @{userCreated}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       {dayjs(createdAt).format("h:mm a, MMMM DD YYYY")}

@@ -20,12 +20,17 @@ import { login } from "../redux/actions/userAction";
 const useStyles = makeStyles({
   form: {
     textAlign: "center",
+    color: "#dbdbdb",
+    "& a": {
+      color: "#00bcd4",
+    },
   },
   logo: {
     margin: "20px auto 20px auto",
   },
   title: {
     margin: "10px auto 10px auto",
+    color: "#dbdbdb",
   },
   textField: {
     margin: "10px auto 10px auto",
@@ -36,7 +41,7 @@ const useStyles = makeStyles({
     position: "relative",
   },
   generalError: {
-    color: "red",
+    color: "#eb4559",
     fontSize: "0.8rem",
     marginTop: 10,
   },
@@ -72,11 +77,12 @@ export default function Login(props) {
         <Grid item sm></Grid>
         <Grid item sm>
           <img src={AppIcon} alt="App Logo" className={classes.logo} />
-          <Typography variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.title} color="inherit">
             Login
           </Typography>
           <form noValidate onSubmit={handleSubmit}>
             <TextField
+              variant="filled"
               required
               type="text"
               id="email"
@@ -87,6 +93,11 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             <TextField
               required
@@ -99,6 +110,12 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              variant="filled"
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             {errors.general && (
               <Typography variant="body2" className={classes.generalError}>

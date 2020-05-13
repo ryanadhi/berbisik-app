@@ -29,16 +29,16 @@ axios.defaults.baseURL =
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#364f6b",
-      main: "#364f6b",
-      dark: "#072740",
-      contrastText: "#f5f5f5",
+      light: "#ffff76",
+      main: "#f6d743",
+      dark: "#c0a600",
+      contrastText: "#000000",
     },
     secondary: {
-      light: "#7af4fc",
-      main: "#f73859",
-      dark: "#009098",
-      contrastText: "#252a34",
+      light: "#5c728b",
+      main: "#30475e",
+      dark: "#032034",
+      contrastText: "#ffffff",
     },
   },
 });

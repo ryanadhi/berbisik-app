@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     float: "right",
   },
   textField: {
+    width: "80%",
     margin: "10px auto 10px auto",
   },
   submitButton: {
@@ -32,8 +33,14 @@ const useStyles = makeStyles({
   },
   visibleSeparator: {
     width: "100%",
+    textAlign: "center",
     borderBottom: "1px solid rgba(0,0,0,0.1)",
-    marginBottom: 20,
+  },
+  formComment: {
+    backgroundColor: "#dee3e2",
+    borderRadius: "10px",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 });
 
@@ -54,27 +61,31 @@ export default function CommentForm({ whisperId }) {
 
   const commentFormMarkup = authenticated ? (
     <Grid item sm={12} style={{ textAlign: "center" }}>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          name="body"
-          type="text"
-          label="Comment on scream"
-          error={errors.comment ? true : false}
-          helperText={errors.comment}
-          {...bindBody}
-          fullWidth
-          className={classes.textField}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          className={classes.button}
-        >
-          Submit
-        </Button>
+      <form onSubmit={handleSubmit} className={classes.formComment}>
+        <Grid container alignItems="center" justify="center">
+          <TextField
+            name="body"
+            type="text"
+            label="Comment on scream"
+            error={errors.comment ? true : false}
+            helperText={errors.comment}
+            {...bindBody}
+            fullWidth
+            className={classes.textField}
+            multiline
+            color="secondary"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Submit
+          </Button>
+        </Grid>
       </form>
-      <hr className={classes.visibleSeparator} />
+      {/* <hr className={classes.visibleSeparator} /> */}
     </Grid>
   ) : null;
 

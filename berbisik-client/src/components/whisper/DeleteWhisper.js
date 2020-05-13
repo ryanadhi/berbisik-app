@@ -14,12 +14,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 // Icons
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   deleteButton: {
-    position: "absolute",
-    left: "90%",
-    top: "10%",
+    // position: "absolute",
+    // left: "90%",
+    // top: "10%",
   },
 });
 
@@ -43,7 +44,7 @@ export default function DeleteWhisper({ whisperId }) {
     <>
       <Tooltip title="Delete Bisikan" placement="top">
         <IconButton onClick={handleOpen} className={classes.deleteButton}>
-          <DeleteOutline color="secondary" />
+          <DeleteOutline style={{ color: red[500] }} />
         </IconButton>
       </Tooltip>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
