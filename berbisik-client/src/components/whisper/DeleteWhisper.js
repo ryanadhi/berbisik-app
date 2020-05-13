@@ -48,12 +48,18 @@ export default function DeleteWhisper({ whisperId }) {
         </IconButton>
       </Tooltip>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>Are you sure you want to delete this scream ?</DialogTitle>
+        <DialogTitle>
+          Are you sure you want to delete this Bisikan ?
+        </DialogTitle>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} variant="contained" color="inherit">
             Cancel
           </Button>
-          <Button onClick={handleDeleteWhisper} color="secondary">
+          <Button
+            onClick={handleDeleteWhisper}
+            variant="contained"
+            style={{ backgroundColor: red[500] }}
+          >
             Delete
           </Button>
         </DialogActions>

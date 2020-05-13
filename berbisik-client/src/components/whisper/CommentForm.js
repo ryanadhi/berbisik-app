@@ -66,7 +66,7 @@ export default function CommentForm({ whisperId }) {
           <TextField
             name="body"
             type="text"
-            label="Comment on scream"
+            label="Comment on whisper"
             error={errors.comment ? true : false}
             helperText={errors.comment}
             {...bindBody}

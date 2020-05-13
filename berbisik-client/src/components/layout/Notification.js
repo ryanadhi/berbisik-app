@@ -81,7 +81,7 @@ export default function Notification() {
               variant="body1"
               to={`/users/${not.recipient}/whispers/${not.whisperId}`}
             >
-              {not.sender} {verb} your scream {time}
+              {not.sender} {verb} your Bisikan {time}
             </Typography>
           </MenuItem>
         );
