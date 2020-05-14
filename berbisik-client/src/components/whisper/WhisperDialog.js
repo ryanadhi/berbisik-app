@@ -16,6 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import Avatar from "@material-ui/core/Avatar";
 
 // Icons
 import CloseIcon from "@material-ui/icons/Close";
@@ -27,23 +28,13 @@ import { red } from "@material-ui/core/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { getWhisper, clearErrors } from "../../redux/actions/dataAction";
 
-const useStyles = makeStyles({
-  profileImage: {
-    maxWidth: 200,
-    height: 200,
-    borderRadius: "50%",
-    objectFit: "cover",
-  },
+const useStyles = makeStyles((theme) => ({
   dialogContent: {
     padding: 20,
   },
   closeButton: {
     position: "absolute",
     left: "90%",
-  },
-  expandButton: {
-    // position: "absolute",
-    // left: "90%",
   },
   spinnerDiv: {
     textAlign: "center",
@@ -62,7 +53,15 @@ const useStyles = makeStyles({
   typography: {
     color: "#cf7500",
   },
-});
+  large: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+    "@media (min-width:600px)": {
+      width: theme.spacing(18),
+      height: theme.spacing(18),
+    },
+  },
+}));
 
 export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
   const dispatch = useDispatch();
@@ -102,15 +101,15 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
       <CircularProgress size={200} thickness={2} />
     </div>
   ) : (
-    <Grid container spacing={2}>
-      <Grid item sm={5}>
-        <img
+    <Grid container spacing={1} justify="center" alignItems="center">
+      <Grid container sm={5} xs={12} justify="center" alignItems="center">
+        <Avatar
+          alt={whisper.userCreated}
           src={whisper.userCreatedImage}
-          alt="Profile"
-          className={classes.profileImage}
+          className={classes.large}
         />
       </Grid>
-      <Grid item sm={7}>
+      <Grid item sm={7} xs={12}>
         <Typography
           className={classes.typography}
           component={Link}

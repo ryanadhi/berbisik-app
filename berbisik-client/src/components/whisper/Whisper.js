@@ -18,6 +18,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import Avatar from "@material-ui/core/Avatar";
 
 // Icons
 import ChatIcon from "@material-ui/icons/Chat";
@@ -25,7 +26,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: "relative",
     display: "flex",
@@ -46,11 +47,6 @@ const useStyles = makeStyles({
     marginBottom: 20,
     borderRadius: "10px",
   },
-  mediaInsideGrid: {
-    width: 100,
-    height: 100,
-    borderRadius: "50%",
-  },
   contentAction: {
     padding: 0,
     height: 20,
@@ -64,7 +60,15 @@ const useStyles = makeStyles({
   typography: {
     color: "#cf7500",
   },
-});
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    "@media (min-width:600px)": {
+      width: theme.spacing(9),
+      height: theme.spacing(9),
+    },
+  },
+}));
 
 export default function Whisper({ whisper, openDialog }) {
   dayjs.extend(relativeTime);
@@ -85,17 +89,17 @@ export default function Whisper({ whisper, openDialog }) {
             justify="center"
             className={classes.gridImage}
             sm={2}
-            xs={12}
+            xs={2}
           >
-            <CardMedia
-              className={classes.mediaInsideGrid}
-              image={whisper.userCreatedImage}
-              title="Profile image"
+            <Avatar
+              alt={whisper.userCreated}
+              src={whisper.userCreatedImage}
+              className={classes.large}
             />
           </Grid>
-          <Grid container sm={10} xs={12} direction="column">
+          <Grid container sm={10} xs={10} direction="column">
             <Grid container>
-              <Grid item sm={10} xs={12}>
+              <Grid item sm={10} xs={10}>
                 <CardContent className={classes.gridContent}>
                   <Typography
                     variant="h6"
@@ -116,7 +120,7 @@ export default function Whisper({ whisper, openDialog }) {
               <Grid
                 container
                 sm={2}
-                xs={12}
+                xs={2}
                 justify="center"
                 alignItems="flex-start"
               >
@@ -128,7 +132,7 @@ export default function Whisper({ whisper, openDialog }) {
               </Grid>
             </Grid>
             <Grid container>
-              <Grid item sm={10} xs={12}>
+              <Grid item sm={10} xs={10}>
                 <CardContent className={classes.contentAction}>
                   <LikeButton whisperId={whisper.whisperId} />
                   <span style={{ marginRight: "10px", marginLeft: "10px" }}>
@@ -148,7 +152,7 @@ export default function Whisper({ whisper, openDialog }) {
                   </span>
                 </CardContent>
               </Grid>
-              <Grid container sm={2} xs={12} justify="center">
+              <Grid container sm={2} xs={2} justify="center">
                 {deleteButton}
               </Grid>
             </Grid>

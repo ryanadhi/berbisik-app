@@ -37,13 +37,23 @@ export default function (state = initialState, actions) {
         whisper: actions.payload,
       };
     case LIKE_WHISPER:
-    case UNLIKE_WHISPER:
       let indexLike = state.whispers.findIndex(
         (whisper) => whisper.whisperId === actions.payload.whisperId
       );
       state.whispers[indexLike] = actions.payload;
       if (state.whisper.whisperId === actions.payload.whisperId) {
-        state.whisper = actions.payload;
+        state.whisper.likeCount = state.whisper.likeCount + 1;
+      }
+      return {
+        ...state,
+      };
+    case UNLIKE_WHISPER:
+      let indexUnlike = state.whispers.findIndex(
+        (whisper) => whisper.whisperId === actions.payload.whisperId
+      );
+      state.whispers[indexUnlike] = actions.payload;
+      if (state.whisper.whisperId === actions.payload.whisperId) {
+        state.whisper.likeCount = state.whisper.likeCount - 1;
       }
       return {
         ...state,
