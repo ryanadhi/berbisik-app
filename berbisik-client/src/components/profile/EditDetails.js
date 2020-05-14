@@ -20,6 +20,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 // Icons
 import EditIcon from "@material-ui/icons/Edit";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   button: {
@@ -114,10 +115,10 @@ export default function EditDetails() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} variant="contained" color="inherit">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSubmit} variant="contained" color="primary">
             Save
           </Button>
         </DialogActions>

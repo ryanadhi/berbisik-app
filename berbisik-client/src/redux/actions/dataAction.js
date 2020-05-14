@@ -79,6 +79,7 @@ export const likeWhisper = (whisperId) => (dispatch) => {
   axios
     .get(`/whispers/${whisperId}/like`)
     .then(({ data }) => {
+      console.log(data);
       dispatch({
         type: LIKE_WHISPER,
         payload: data,
@@ -92,6 +93,7 @@ export const unlikeWhisper = (whisperId) => (dispatch) => {
   axios
     .get(`/whispers/${whisperId}/unlike`)
     .then(({ data }) => {
+      console.log(data);
       dispatch({
         type: UNLIKE_WHISPER,
         payload: data,

@@ -20,15 +20,21 @@ import { signup } from "../redux/actions/userAction";
 const useStyles = makeStyles({
   form: {
     textAlign: "center",
+    color: "#dbdbdb",
+    "& a": {
+      color: "#00bcd4",
+    },
   },
   logo: {
     margin: "20px auto 20px auto",
   },
   title: {
     margin: "10px auto 10px auto",
+    color: "#dbdbdb",
   },
   textField: {
     margin: "10px auto 10px auto",
+    color: "#dbdbdb",
   },
   button: {
     marginTop: 20,
@@ -36,7 +42,7 @@ const useStyles = makeStyles({
     position: "relative",
   },
   generalError: {
-    color: "red",
+    color: "#eb4559",
     fontSize: "0.8rem",
     marginTop: 10,
   },
@@ -99,6 +105,12 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              variant="filled"
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             <TextField
               required
@@ -111,6 +123,12 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              variant="filled"
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             <TextField
               required
@@ -123,6 +141,12 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              variant="filled"
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             <TextField
               required
@@ -135,6 +159,12 @@ export default function Login(props) {
               autoComplete="off"
               fullWidth
               className={classes.textField}
+              variant="filled"
+              InputLabelProps={{
+                style: {
+                  color: "#888888",
+                },
+              }}
             />
             {errors.general && (
               <Typography variant="body2" className={classes.generalError}>

@@ -16,31 +16,23 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import Avatar from "@material-ui/core/Avatar";
 
 // Icons
 import CloseIcon from "@material-ui/icons/Close";
 import UnfoldMore from "@material-ui/icons/UnfoldMore";
 import ChatIcon from "@material-ui/icons/Chat";
+import { red } from "@material-ui/core/colors";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
 import { getWhisper, clearErrors } from "../../redux/actions/dataAction";
 
-const useStyles = makeStyles({
-  profileImage: {
-    maxWidth: 200,
-    height: 200,
-    borderRadius: "50%",
-    objectFit: "cover",
-  },
+const useStyles = makeStyles((theme) => ({
   dialogContent: {
     padding: 20,
   },
   closeButton: {
-    position: "absolute",
-    left: "90%",
-  },
-  expandButton: {
     position: "absolute",
     left: "90%",
   },
@@ -55,10 +47,21 @@ const useStyles = makeStyles({
   },
   visibleSeparator: {
     width: "100%",
+    textAlign: "center",
     borderBottom: "1px solid rgba(0,0,0,0.1)",
-    marginBottom: 20,
   },
-});
+  typography: {
+    color: "#cf7500",
+  },
+  large: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+    "@media (min-width:600px)": {
+      width: theme.spacing(18),
+      height: theme.spacing(18),
+    },
+  },
+}));
 
 export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
   const dispatch = useDispatch();
@@ -98,19 +101,20 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
       <CircularProgress size={200} thickness={2} />
     </div>
   ) : (
-    <Grid container spacing={2}>
-      <Grid item sm={5}>
-        <img
+    <Grid container spacing={1} justify="center" alignItems="center">
+      <Grid container sm={5} xs={12} justify="center" alignItems="center">
+        <Avatar
+          alt={whisper.userCreated}
           src={whisper.userCreatedImage}
-          alt="Profile"
-          className={classes.profileImage}
+          className={classes.large}
         />
       </Grid>
-      <Grid item sm={7}>
+      <Grid item sm={7} xs={12}>
         <Typography
+          className={classes.typography}
           component={Link}
           color="primary"
-          variant="h5"
+          variant="h6"
           to={`/users/${whisper.userCreated}`}
         >
           @{whisper.userCreated}
@@ -122,16 +126,20 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
         <hr className={classes.invisibleSeparator} />
         <Typography variant="body1">{whisper.body}</Typography>
         <LikeButton whisperId={whisper.whisperId} />
-        <span>{whisper.likeCount} Likes</span>
+        <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+          {whisper.likeCount} Likes
+        </span>
         <Tooltip title="Comments" placement="top">
           <IconButton>
             <ChatIcon color="primary" />
           </IconButton>
         </Tooltip>
-        <span>{whisper.commentCount} Comments</span>
+        <span style={{ marginRight: "10px", marginLeft: "10px" }}>
+          {whisper.commentCount} Comments
+        </span>
       </Grid>
-      <hr className={classes.visibleSeparator} />
       <CommentForm whisperId={whisper.whisperId} />
+      <hr className={classes.visibleSeparator} />
       <Comments comments={whisper.comments} />
     </Grid>
   );
@@ -150,7 +158,7 @@ export default function WhisperDialog({ openDialog, whisperId, userCreated }) {
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <Tooltip title="Close" placement="top" className={classes.closeButton}>
           <IconButton onClick={handleClose}>
-            <CloseIcon color="secondary" />
+            <CloseIcon style={{ color: red[500] }} />
           </IconButton>
         </Tooltip>
         <DialogContent className={classes.dialogContent}>
